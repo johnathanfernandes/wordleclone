@@ -11,9 +11,12 @@ st.write("Built by [Johnathan Fernandes](johnathanfernandes.github.io/)")
 
 st.write("Slide Word size to choose the number of letters")
 st.write("Slide Number of attempts to choose the number of tries you get")
-st.write("The answer is tied to game_code, so if you use the same code as a friend, you'll both be guessing the same answer. Type in RANDOM to get a random word.")
+st.write("The answer is tied to the game code, so if you use the same code as a friend, you'll both be guessing the same answer. Type in RANDOM to get a random word.")
 
-nltk.download("brown")
+with st.spinner('Thinking of words...'):
+    nltk.download("brown")
+st.success('Loading complete')
+
 
 word_size = st.slider("Word size", 4, 12, 5)
 number_attempts = st.slider("Number of attempts", 3, 8, 6)
@@ -47,24 +50,26 @@ with right:
         st.session_state.guess = str(
             st.session_state.guess
         ).lower()  # Convert to lowercase to check
-        if len(st.session_state.guess) < word_size:  # If the word is too small
-            st.error("Too few letters")
-        elif len(st.session_state.guess) > word_size:
-            st.error("Too many letters")
-        elif st.session_state.guess not in word_list:  # If the word isn't a word
-            st.error(
-                "Word not in dictionary. Check [here](http://icame.uib.no/brown/bcm.html) for this game's list of legal words"
-            )
-        else:
-            try:
-                st.session_state.total_results.append(
-                    list(st.session_state.guess.upper())
-                )  # Add this result to the list of all results
-            except AttributeError:
-                pass
-        if st.session_state.guess == answer:
-            st.session_state.number_attempts = -1
-            st.text("A winner is you")
+
+        if len(st.session_state.guess) > 0:
+            if len(st.session_state.guess) < word_size:  # If the word is too small
+                st.error("Too few letters")
+            elif len(st.session_state.guess) > word_size:
+                st.error("Too many letters")
+            elif st.session_state.guess not in word_list:  # If the word isn't a word
+                st.error(
+                    "Word not in dictionary. Check [here](http://icame.uib.no/brown/bcm.html) for this game's list of legal words"
+                )
+            else:
+                try:
+                    st.session_state.total_results.append(
+                        list(st.session_state.guess.upper())
+                    )  # Add this result to the list of all results
+                except AttributeError:
+                    pass
+            if st.session_state.guess == answer:
+                st.session_state.number_attempts = -1
+                st.success("A winner is you")
 
     with left:
         df = pd.DataFrame(st.session_state.total_results)
@@ -73,8 +78,6 @@ with right:
             for col_idx, col in df.iteritems():
                 if row[col_idx].lower() == answer[col_idx]:
                     row[col_idx] = row[col_idx].lower()
-        print(df)
-        print(answer)
 
         style = df.style.applymap(
             lambda x: "height: 100px; width: 100px; text-align: center; font-size: 40px;"
