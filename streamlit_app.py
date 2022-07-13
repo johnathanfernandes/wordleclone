@@ -55,9 +55,6 @@ with right:
             st.error(
                 "Word not in dictionary. Check [here](http://icame.uib.no/brown/bcm.html) for this game's list of legal words"
             )
-        elif st.session_state.guess == answer:
-            st.session_state.number_attempts = -1
-            st.text("A winner is you")
         else:
             try:
                 st.session_state.total_results.append(
@@ -65,19 +62,37 @@ with right:
                 )  # Add this result to the list of all results
             except AttributeError:
                 pass
+        if st.session_state.guess == answer:
+            st.session_state.number_attempts = -1
+            st.text("A winner is you")
 
     with left:
         df = pd.DataFrame(st.session_state.total_results)
+
+        for row_idx, row in df.iterrows():
+            for col_idx, col in df.iteritems():
+                if row[col_idx].lower() == answer[col_idx]:
+                    row[col_idx] = row[col_idx].lower()
+        print(df)
+        print(answer)
+
         style = df.style.applymap(
             lambda x: "height: 100px; width: 100px; text-align: center; font-size: 40px;"
         )
         style = style.applymap(
             lambda x: "background-color: orange"
             if x.lower() in list(answer)
-            else "background-color: black"
+            else ""
         )
-        # style = style.applymap(lambda x: "background-color: blue" if x.lower() == answer[st.session_state.guess.index(str(x.lower()))] else "background-color: black")
+        style = style.applymap(
+            lambda x: "background-color: blue"
+            if x.islower()
+            else ""
+        )
 
+        style = style.applymap(
+            lambda x: "text-transform:uppercase"
+        )
         style = style.hide(axis=0)
         style = style.hide(axis=1)
 
