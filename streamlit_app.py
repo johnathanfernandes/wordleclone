@@ -3,6 +3,7 @@ import streamlit as st
 import pandas as pd
 import random
 import random  # Select random words
+import nltk
 from nltk.corpus import brown  # Word corpus
 
 st.title('Wordle clone')
