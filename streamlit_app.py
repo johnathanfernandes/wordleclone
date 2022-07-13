@@ -47,11 +47,11 @@ with right:
         st.session_state.guess = str(
             st.session_state.guess
         ).lower()  # Convert to lowercase to check
-        if len(st.session_state.guess) < word_size:  # If the word is too small
+        if len(st.session_state.guess) < word_size and len(st.session_state.guess) > 0:  # If the word is too small
             st.error("Too few letters")
         elif len(st.session_state.guess) > word_size:
             st.error("Too many letters")
-        elif st.session_state.guess not in word_list:  # If the word isn't a word
+        elif st.session_state.guess not in word_list and len(st.session_state.guess) > 0:  # If the word isn't a word
             st.error(
                 "Word not in dictionary. Check [here](http://icame.uib.no/brown/bcm.html) for this game's list of legal words"
             )
