@@ -26,7 +26,7 @@ if "total_results" not in st.session_state:
 if "guess" not in st.session_state:
     st.session_state.guess = ""
 
-if game_code == "RANDOM":
+if game_code.lower() == "random":
     pass
 else:
     random.seed(a=game_code, version=2)
